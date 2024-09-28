@@ -1,70 +1,95 @@
-#ifndef _MAGRIDE_PLANNING_EASYMATRIX_H_
-#define _MAGRIDE_PLANNING_EASYMATRIX_H_
+#ifndef MATRIX_H
+#define MATRIX_H
 
+#include <stdio.h>
 #include <stdlib.h>
-typedef unsigned char uint8;
-typedef float DATA_TYPE;
 
 
-#define CREATE_MATRIX_ONSTACK(x,y,matrix,initval) \
-struct easyMatrix matrix;\
-DATA_TYPE val##x##N##y##N##matrix[x*y];\
-    matrix.rows = x;\
-    matrix.cols = y;\
-    matrix.element = val##x##N##y##N##matrix;\
-    if(initval!=NULL) setMatrix(initval, &(matrix))
+typedef struct
+{
+    int cols;
+    int rows;
+    float element[3][3];
+} Matrix3d;
 
-#define CREATE_DYNAMIC_MATRIX_ONHEAP(x,y,matrix,initval) \
-struct easyMatrix *matrix = (struct easyMatrix*)malloc(sizeof(struct easyMatrix));\
-matrix->rows = x;\
-matrix->cols = y;\
-matrix->element = (DATA_TYPE*) malloc(sizeof(DATA_TYPE)*(x)*(y));\
-if(initval!=NULL) setMatrix(initval, (matrix))
+typedef struct
+{
+    int cols;
+    int rows;
+    float element[3];
+} Vector3d;
 
-#define DELETE_DYNAMIC_MATRIX(matrix) \
-    free((matrix)->element);\
-    free(matrix)
+void printMatrix(Matrix3d matrix)
+{
+    for (size_t i = 0; i < 3; i++)
+    {
+        printf("[%f,%f,%f]\n", matrix.element[i][0], matrix.element[i][1], matrix.element[i][2]);
+    }
+}
 
-struct easyMatrix {
-    uint8 rows,cols;
-    DATA_TYPE* element;
-};
-
-struct easyMatrix* setMatrix(DATA_TYPE* const a,struct easyMatrix* c);
-
-struct easyMatrix* copyMatrix(struct easyMatrix* const a,struct easyMatrix* c);
-
-struct easyMatrix* transMatrix(struct easyMatrix* const a,struct easyMatrix* c);
-
-DATA_TYPE detMatrix(struct easyMatrix* const a);
-
-DATA_TYPE invMatrix(struct easyMatrix* const a, struct easyMatrix*b);
-
-struct easyMatrix* scaleMatrix(DATA_TYPE, struct easyMatrix* const a, struct easyMatrix*);
-
-struct easyMatrix* addMatrix(const struct easyMatrix* const a, const struct easyMatrix *const  b, struct easyMatrix * c);
-
-struct easyMatrix* leftMatrix(uint8, uint8, struct easyMatrix* const a, struct easyMatrix* b);
-
-struct easyMatrix* subMatrix(struct easyMatrix* const a, struct easyMatrix* const  b, struct easyMatrix* c);
-
-struct easyMatrix* multiMatrix(struct easyMatrix* const a, struct easyMatrix* const b, struct easyMatrix* c);
-
-struct easyMatrix* zerosMatrix(struct easyMatrix* e);
-
-struct easyMatrix* eyesMatrix(struct easyMatrix* e);
-
-void dumpMatrix(struct easyMatrix* const e);
-
-struct easyMatrix* adjMatrix(struct easyMatrix* const a,struct easyMatrix* c);
-
-struct easyMatrix* getLUMatrix(struct easyMatrix* const A, struct easyMatrix* L,struct easyMatrix* U) ;
-
-struct easyMatrix* invLMatrix(struct easyMatrix* const L, struct easyMatrix* L_inv) ;
-struct easyMatrix* invUMatrix(struct easyMatrix* const U, struct easyMatrix* U_inv) ;
-
-struct easyMatrix* solveEquationMatrix(const struct easyMatrix* const A,const struct easyMatrix* const Y, struct easyMatrix* X) ;
+void printVector(Vector3d matrix)
+{
+    for (size_t i = 0; i < 3; i++)
+    {
+        printf("[%f]\n", matrix.element[i]);
+    }
+}
 
 
-DATA_TYPE fastDetMatrix(struct easyMatrix* const in) ;
-#endif//_MAGRIDE_PLANNING_EASYMATRIX_H_
+Matrix3d CreateMatrix3d(float data[3][3])
+{
+    Matrix3d matrix;
+    matrix.cols = 3;
+    matrix.rows = 3;
+    for (size_t i = 0; i < 3; i++)
+    {
+        for (size_t j = 0; j < 3; j++)
+        {
+            matrix.element[i][j] = data[i][j];
+        }
+    }
+    return matrix;
+}
+
+Vector3d CreateVector3d(float data[3]){
+    Vector3d vector3d;
+    vector3d.rows = 3;
+    vector3d.cols = 1;
+    for (size_t i = 0; i < 3; i++)
+    {
+        vector3d.element[i] = data[i];
+    }
+    return vector3d;
+}
+float determinant(Matrix3d *matrix)
+{
+    return matrix->element[0][0] * (matrix->element[1][1] * matrix->element[2][2] - matrix->element[1][2] * matrix->element[2][1]) - matrix->element[0][1] * (matrix->element[1][0] * matrix->element[2][2] - matrix->element[1][2] * matrix->element[2][0]) + matrix->element[0][2] * (matrix->element[1][0] * matrix->element[2][1] - matrix->element[1][1] * matrix->element[2][0]);
+}
+
+
+Matrix3d inverse(Matrix3d *matrix) {
+    Matrix3d inverseMatrix;
+    float det = determinant(matrix);
+
+    if (det == 0) {
+        printf("Matrix is not invertible.\n");
+        exit(1);
+    }
+
+    inverseMatrix.element[0][0] = (matrix->element[1][1] * matrix->element[2][2] - matrix->element[1][2] * matrix->element[2][1]) / det;
+    inverseMatrix.element[0][1] = -(matrix->element[0][1] * matrix->element[2][2] - matrix->element[0][2] * matrix->element[2][1]) / det;
+    inverseMatrix.element[0][2] = (matrix->element[0][1] * matrix->element[1][2] - matrix->element[0][2] * matrix->element[1][1]) / det;
+    inverseMatrix.element[1][0] = -(matrix->element[1][0] * matrix->element[2][2] - matrix->element[1][2] * matrix->element[2][0]) / det;
+    inverseMatrix.element[1][1] = (matrix->element[0][0] * matrix->element[2][2] - matrix->element[0][2] * matrix->element[2][0]) / det;
+    inverseMatrix.element[1][2] = -(matrix->element[0][0] * matrix->element[1][2] - matrix->element[0][2] * matrix->element[1][0]) / det;
+    inverseMatrix.element[2][0] = (matrix->element[1][0] * matrix->element[2][1] - matrix->element[1][1] * matrix->element[2][0]) / det;
+    inverseMatrix.element[2][1] = -(matrix->element[0][0] * matrix->element[2][1] - matrix->element[0][1] * matrix->element[2][0]) / det;
+    inverseMatrix.element[2][2] = (matrix->element[0][0] * matrix->element[1][1] - matrix->element[0][1] * matrix->element[1][0]) / det;
+
+    return inverseMatrix;
+}
+
+
+
+
+#endif // MATRIX_H
