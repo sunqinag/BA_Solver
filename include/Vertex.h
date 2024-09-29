@@ -3,26 +3,25 @@
 
 #include "Matrix.h"
 
-void printMatrix(struct easyMatrix* mat);
 
 typedef struct
 {
     int id;
     int dimension;
     int local_dimension;
-    struct easyMatrix parameters_;        // 实际储存的变量值
-    struct easyMatrix parameters_backup_; // 备份参数，用于回滚
-} Vertex3d;
+    Vector3f parameters_;        // 实际储存的变量值
+    Vector3f parameters_backup_; // 备份参数，用于回滚
+} Vertex3f;
 
-void InitVertex3d(Vertex3d *vertex, int local_dimension);
+void InitVertex3f(Vertex3f *vertex, int local_dimension);
 
-void SetVertex3d(Vertex3d *vertex, float params[]);
+void SetVertex3f(Vertex3f *vertex, float params[3]);
 
 // 备份和回滚参数，用于丢弃一些迭代过程中不好的估计
-void BackUpParameters(Vertex3d *vertex);
-void RollBackParameters(Vertex3d *vertex);
+void BackUpParameters(Vertex3f *vertex);
+void RollBackParameters(Vertex3f *vertex);
 
-void Plus(Vertex3d *vertex, struct easyMatrix* delta);
+void Plus(Vertex3f *vertex, Vector3f* delta);
 
 
 #endif // VERTEX_H

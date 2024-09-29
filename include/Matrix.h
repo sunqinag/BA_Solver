@@ -10,86 +10,42 @@ typedef struct
     int cols;
     int rows;
     float element[3][3];
-} Matrix3d;
+} Matrix3f;
 
 typedef struct
 {
     int cols;
     int rows;
     float element[3];
-} Vector3d;
-
-void printMatrix(Matrix3d matrix)
-{
-    for (size_t i = 0; i < 3; i++)
-    {
-        printf("[%f,%f,%f]\n", matrix.element[i][0], matrix.element[i][1], matrix.element[i][2]);
-    }
-}
-
-void printVector(Vector3d matrix)
-{
-    for (size_t i = 0; i < 3; i++)
-    {
-        printf("[%f]\n", matrix.element[i]);
-    }
-}
+} Vector3f;
 
 
-Matrix3d CreateMatrix3d(float data[3][3])
-{
-    Matrix3d matrix;
-    matrix.cols = 3;
-    matrix.rows = 3;
-    for (size_t i = 0; i < 3; i++)
-    {
-        for (size_t j = 0; j < 3; j++)
-        {
-            matrix.element[i][j] = data[i][j];
-        }
-    }
-    return matrix;
-}
+void printMatrix(Matrix3f matrix);
 
-Vector3d CreateVector3d(float data[3]){
-    Vector3d vector3d;
-    vector3d.rows = 3;
-    vector3d.cols = 1;
-    for (size_t i = 0; i < 3; i++)
-    {
-        vector3d.element[i] = data[i];
-    }
-    return vector3d;
-}
-float determinant(Matrix3d *matrix)
-{
-    return matrix->element[0][0] * (matrix->element[1][1] * matrix->element[2][2] - matrix->element[1][2] * matrix->element[2][1]) - matrix->element[0][1] * (matrix->element[1][0] * matrix->element[2][2] - matrix->element[1][2] * matrix->element[2][0]) + matrix->element[0][2] * (matrix->element[1][0] * matrix->element[2][1] - matrix->element[1][1] * matrix->element[2][0]);
-}
+void printVector(Vector3f matrix);
 
 
-Matrix3d inverse(Matrix3d *matrix) {
-    Matrix3d inverseMatrix;
-    float det = determinant(matrix);
+Vector3f ZeroVector3f();
 
-    if (det == 0) {
-        printf("Matrix is not invertible.\n");
-        exit(1);
-    }
+Matrix3f ZeroMatrix3f();
 
-    inverseMatrix.element[0][0] = (matrix->element[1][1] * matrix->element[2][2] - matrix->element[1][2] * matrix->element[2][1]) / det;
-    inverseMatrix.element[0][1] = -(matrix->element[0][1] * matrix->element[2][2] - matrix->element[0][2] * matrix->element[2][1]) / det;
-    inverseMatrix.element[0][2] = (matrix->element[0][1] * matrix->element[1][2] - matrix->element[0][2] * matrix->element[1][1]) / det;
-    inverseMatrix.element[1][0] = -(matrix->element[1][0] * matrix->element[2][2] - matrix->element[1][2] * matrix->element[2][0]) / det;
-    inverseMatrix.element[1][1] = (matrix->element[0][0] * matrix->element[2][2] - matrix->element[0][2] * matrix->element[2][0]) / det;
-    inverseMatrix.element[1][2] = -(matrix->element[0][0] * matrix->element[1][2] - matrix->element[0][2] * matrix->element[1][0]) / det;
-    inverseMatrix.element[2][0] = (matrix->element[1][0] * matrix->element[2][1] - matrix->element[1][1] * matrix->element[2][0]) / det;
-    inverseMatrix.element[2][1] = -(matrix->element[0][0] * matrix->element[2][1] - matrix->element[0][1] * matrix->element[2][0]) / det;
-    inverseMatrix.element[2][2] = (matrix->element[0][0] * matrix->element[1][1] - matrix->element[0][1] * matrix->element[1][0]) / det;
+Matrix3f CreateMatrix3f(float data[3][3]);
 
-    return inverseMatrix;
-}
+Vector3f CreateVector3f(float data[3]);
 
+float determinant(Matrix3f *matrix);
 
+Matrix3f inverse(Matrix3f *matrix);
+
+Vector3f Vector3fAddVector3f(Vector3f *vector1,Vector3f *vector2);
+
+Vector3f SubtractVector3f(Vector3f *vector1,Vector3f *vector2);
+
+Vector3f Vector3fTransform(Vector3f *vector);
+
+Matrix3f Matrix3fMultiplyMatrix3f(Matrix3f *m1, Matrix3f *m2);
+
+Matrix3f Matrix3fTranspose(Matrix3f *matrix);
 
 
 #endif // MATRIX_H
