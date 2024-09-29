@@ -21,7 +21,8 @@ int main()
     printf("set parameters\n");
     printVector(vertex3f.parameters_);
 
-    // printf("test\n");
-    // Plus(&vertex3d_2,&param2);
+    printf("========== test ================\n");
+    Plus(&vertex3f,&vertex3f.parameters_);
+    printVector(vertex3f.parameters_);
     return 0;
 }

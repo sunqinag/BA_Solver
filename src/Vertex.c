@@ -46,11 +46,11 @@ void RollBackParameters(Vertex3f *vertex)
     vertex->parameters_ = tmp_parameters;
 }
 
-// void Plus(Vertex3f *vertex, Vector3f *delta)
-// {
-//     printf("========= before add ==========\n");
-//     printVector(vertex->parameters_);
-//     addMatrix(&vertex->parameters_, &delta, &vertex->parameters_);
-//     printf("========= after add ==========\n");
-//     printVector(vertex->parameters_);
-// }
+void Plus(Vertex3f *vertex, Vector3f *delta)
+{
+    printf("========= before add ==========\n");
+    printVector(vertex->parameters_);
+    // addMatrix(&vertex->parameters_, &delta, &vertex->parameters_);
+    vertex->parameters_ = Vector3fAddVector3f(&vertex->parameters_,delta);
+    printf("========= after add ==========\n");
+}

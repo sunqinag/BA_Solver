@@ -28,8 +28,8 @@ Vector3f ZeroVector3f()
     return vector3f;
 }
 
-
-Matrix3f ZeroMatrix3f(){
+Matrix3f ZeroMatrix3f()
+{
     Matrix3f matrix;
     matrix.cols = 3;
     matrix.rows = 3;
@@ -56,8 +56,6 @@ Matrix3f CreateMatrix3f(float data[3][3])
     }
     return matrix;
 }
-
-
 
 Vector3f CreateVector3f(float data[3])
 {
@@ -110,28 +108,33 @@ Vector3f Vector3fAddVector3f(Vector3f *vector1, Vector3f *vector2)
     return vector;
 }
 
-Vector3f SubtractVector3f(Vector3f *vector1,Vector3f *vector2)
+Vector3f SubtractVector3f(Vector3f *vector1, Vector3f *vector2)
 {
     Vector3f vector = *vector1;
     for (size_t i = 0; i < 3; i++)
     {
-        vector.element[i] = vector1->element[i]-vector2->element[i];
+        vector.element[i] = vector1->element[i] - vector2->element[i];
     }
     return vector;
 }
 
-Vector3f Vector3fTransform(Vector3f *vector){
-    vector->cols=3;
-    vector->rows=1;
+Vector3f Vector3fTransform(Vector3f *vector)
+{
+    vector->cols = 3;
+    vector->rows = 1;
     return *vector;
 }
 
-Matrix3f Matrix3fMultiplyMatrix3f(Matrix3f *m1, Matrix3f *m2) {
-    Matrix3f result  = ZeroMatrix3f();
-    for (int i = 0; i < 3; i++) {
-        for (int j = 0; j < 3; j++) {
+Matrix3f Matrix3fMultiplyMatrix3f(Matrix3f *m1, Matrix3f *m2)
+{
+    Matrix3f result = ZeroMatrix3f();
+    for (int i = 0; i < 3; i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
             result.element[i][j] = 0;
-            for (int k = 0; k < 3; k++) {
+            for (int k = 0; k < 3; k++)
+            {
                 result.element[i][j] += m1->element[i][k] * m2->element[k][j];
             }
         }
@@ -140,10 +143,13 @@ Matrix3f Matrix3fMultiplyMatrix3f(Matrix3f *m1, Matrix3f *m2) {
 }
 
 // 矩阵转置
-Matrix3f Matrix3fTranspose(Matrix3f *matrix) {
+Matrix3f Matrix3fTranspose(Matrix3f *matrix)
+{
     Matrix3f transposedMatrix = ZeroMatrix3f();
-    for (int i = 0; i < matrix->rows; i++) {
-        for (int j = 0; j < matrix->cols; j++) {
+    for (int i = 0; i < matrix->rows; i++)
+    {
+        for (int j = 0; j < matrix->cols; j++)
+        {
             transposedMatrix.element[j][i] = matrix->element[i][j];
         }
     }
